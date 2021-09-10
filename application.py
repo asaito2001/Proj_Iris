@@ -6,7 +6,7 @@ import pickle as pkl
 app = Flask(__name__)
 
 os.chdir(os.path.dirname(__file__))
-with open(r'./model/decision_tree.pkl', 'rb') as fp:
+with open('model/decision_tree.pkl', 'rb') as fp:
     model = pkl.load(fp)
 
 @app.route('/', methods=['GET'])
@@ -25,7 +25,7 @@ def predict():
             request_dict["petal_length_cm"],
             request_dict["petal_width_cm"]
             ]
-
+        
         prediction = model.predict([predict_list])[0]
         return make_response( prediction, 200)
 

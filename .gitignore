@@ -3,3 +3,4 @@ lenv/*
 wenv/*
 __pycache__/*
 __init__.py
+*.pem
