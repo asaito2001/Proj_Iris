@@ -1,0 +1,32 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build the Docker image
+      uses: Azure/docker-login-action@v1.10.0
+      with:
+        # Server address of Docker registry. If not set then will default to Docker Hub
+        registry: ${{{ secrets.DOCKER_CONTAINER_REGISTRY }}
+        # Username used to log against the Docker registry
+        username: ${{ secrets.DOCKER_USERNAME }}
+        # Password or personal access token used to log against the Docker registry
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build e Push no Azure Container Registry
+      run: |
+        docker build . --file Dockerfile --tag ${{ secrets.DOCKER_CONTAINER_REGISTRY }}/proj_iris:latest
+        docker tag ${{ secrets.DOCKER_CONTAINER_REGISTRY }}/proj_iris:latest ${{ secrets.DOCKER_CONTAINER_REGISTRY }}/proj_iris:$(date +%s)
+        docker push ${{ secrets.DOCKER_CONTAINER_REGISTRY }}/proj_iris
